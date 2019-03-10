@@ -616,421 +616,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/16/Flume/Flume学习笔记/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="lynnyq">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="lynnyq">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/02/16/Flume/Flume学习笔记/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-16T23:32:13+08:00">
-                2019-02-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Flume笔记"><a href="#Flume笔记" class="headerlink" title="Flume笔记"></a>Flume笔记</h1><p>[TOC]</p>
-<h2 id="1-Flume概述"><a href="#1-Flume概述" class="headerlink" title="1.Flume概述"></a>1.Flume概述</h2><p>​    Flume NG是一个分布式，高可用，可靠的系统，它能将不同的海量数据收集，移动并存储到一个数据存储系统中。轻量，配置简单，适用于各种日志收集，并支持Failover和负载均衡。并且它拥有非常丰富的组件。Flume NG采用的是三层架构：Agent层，Collector层和Store层，每一层均可水平拓展。其中Agent包含Source，Channel和Sink，三者组建了一个Agent。三者的职责如下所示： </p>
-<ul>
-<li><strong>Source：</strong>用来消费（收集）数据源到Channel组件中</li>
-<li><strong>Channel：</strong>中转临时存储，保存所有Source组件信息</li>
-<li><strong>Sink：</strong>从Channel中读取，读取成功后会删除Channel中的信息</li>
-</ul>
-<p>下图是Flume NG的架构图：</p>
-<p><img src="images/01.png" alt="架构图"> </p>
-<h2 id="2-Flume介绍"><a href="#2-Flume介绍" class="headerlink" title="2.Flume介绍"></a>2.Flume介绍</h2><p>Flume用户手册：<a href="http://flume.apache.org/FlumeUserGuide.html" target="_blank" rel="noopener">http://flume.apache.org/FlumeUserGuide.html</a></p>
-<p>Flume开发者手册：<a href="http://flume.apache.org/FlumeDeveloperGuide.html" target="_blank" rel="noopener">http://flume.apache.org/FlumeDeveloperGuide.html</a></p>
-<h3 id="2-1-Flume采集系统结构图"><a href="#2-1-Flume采集系统结构图" class="headerlink" title="2.1.Flume采集系统结构图"></a>2.1.Flume采集系统结构图</h3><ul>
-<li>简单结构：单个agent采集数据</li>
-</ul>
-<p><img src="images/02.png" alt="单个agent"></p>
-<ul>
-<li>复杂结构：多级agent之间串联</li>
-</ul>
-<p><img src="images/03.png" alt="多级agent"></p>
-<ul>
-<li>高可用Flume NG集群 ：</li>
-</ul>
-<p><img src="images/04.png" alt="Flume NG集群"></p>
-<p><code>Flume的存储可以支持多种，这里只列举了HDFS和Kafka（如：存储最新的一周日志，并给Storm系统提供实时日志流）</code></p>
-<h3 id="2-2-Flume-Sources"><a href="#2-2-Flume-Sources" class="headerlink" title="2.2.Flume Sources"></a>2.2.Flume Sources</h3><p>参考：</p>
-<p><a href="https://www.cnblogs.com/swordfall/p/8254271.html" target="_blank" rel="noopener">https://www.cnblogs.com/swordfall/p/8254271.html</a></p>
-<p><a href="http://flume.apache.org/FlumeUserGuide.html" target="_blank" rel="noopener">http://flume.apache.org/FlumeUserGuide.html</a></p>
-<h4 id="2-2-1-Flume-Sources-类型"><a href="#2-2-1-Flume-Sources-类型" class="headerlink" title="2.2.1.Flume Sources 类型"></a>2.2.1.Flume Sources 类型</h4><p>官网文档上要求的属性是粗体字。</p>
-<ul>
-<li><p><strong>1.Avro Source:</strong></p>
-<p>监听Avro端口，从Avro client streams接收events。 </p>
-</li>
-<li><p><strong>2.Thrift Source：</strong></p>
-<p>监听Thrift端口和从外部Thrift client streams接收events。 </p>
-</li>
-<li><p><strong>3.Exec Source:</strong></p>
-<p>Exec Source在启动时运行一个Unix命令行，并期望这过程在标准输出上连续生产数据。 </p>
-</li>
-<li><p><strong>4.JMS Source：</strong></p>
-<p>JMS Source从JMS目标（如队列或者主题）读取消息。JMS应用程序应该可以与任何JMS提供程序一起工作，但是只能使用ActiveMQ进行测试。 </p>
-</li>
-<li><p><strong>5.Spooling Directory Source:</strong></p>
-<p>该source让你通过放置被提取文件在磁盘”spooling“目录下这一方式，提取数据。该source将会监控指定目录的新增文件，当新文件出现时解析event。event解析逻辑是可插入的。当一个给定文件被全部读取进channel之后，它被重命名，以标识为已完成（或者可选择deleted）。 </p>
-</li>
-<li><p><strong>6.Taildir Source:</strong></p>
-<p>注意：该source不能用于windows。 </p>
-</li>
-<li><p><strong>7.Twitter 1% firehose Source(试验):</strong></p>
-</li>
-<li><p><strong>8.Kafka Source:</strong></p>
-<p>Kafka Source是Apache Kafka消费者，从Kfaka topics读取消息。如果你有多个Kafka source在跑，你可以配置它们在相同的Consumer Group，以使它们每个读取topics独特的分区。 </p>
-</li>
-<li><p><strong>9.NetCat TCP Source:</strong></p>
-<p>netcat source监听一个给定的端口，然后把text文件的每一行转换成一个event。要求属性是粗体字。 </p>
-</li>
-<li><p><strong>10.NetCat UDP Source:</strong></p>
-<p>netcat source监听一个给定的端口，然后把text文件的每一行转换成一个event。 </p>
-</li>
-<li><p><strong>11.Sequence Generator Source:</strong></p>
-<p>一个简单的序列生成器可以不断生成events，带有counter计数器，从0开始，以1递增，在totalEvents停止。当不能发送events到channels时会不断尝试。 </p>
-</li>
-<li><p><strong>12.Syslog Sources:</strong></p>
-<p>读取系统日志，并生成Flume events。UDP source以整条消息作为一个简单event。TCP source以新一行”n“分割的字符串作为一个新的event。 </p>
-<ul>
-<li><strong>Syslog TCP Source :</strong><code>原始的，可靠的Syslog TCP source。</code></li>
-<li><strong>Multiport Syslog TCP Source:</strong><code>这是一个新的，更快的，多端口的Syslog TCP source版本。注意ports配置替代port。</code></li>
-<li><strong>Syslog UDP Source:</strong></li>
-</ul>
-</li>
-<li><p><strong>13.HTTP Source:</strong></p>
-<p>source 通过HTTP POST 和 GET，接收Flume events。GET只能用于试验。HTTP requests通过 必须实现 HTTPSourceHandler接口的 ”handler“ 转换成flume events。该handler获取HttpServletRequest，然后返回一系列的flume events。 </p>
-</li>
-<li><p><strong>14.Stress Source:</strong></p>
-<p>StressSource 是内部负载生成source的实现，这对于压力测试是非常有用的。它允许用户配置Event有效载荷的大小。 </p>
-</li>
-<li><p><strong>15.Legacy Sources:</strong></p>
-<p>Legacy sources允许Flume 1.x agent接收来自Flume 0.9.4 agents的events。legacy source 支持Avro和Thrift RPC 连接。为了使用两个Flume 版本搭建的桥梁，你需要开始一个带有avroLegacy或者thriftLegacy source的Flume 1.x agent。0.9.4agent应该有agent Sink指向1.x agent的host/port。</p>
-<ul>
-<li>Avro Legacy Source</li>
-<li>Thrift Legacy Source</li>
-</ul>
-</li>
-<li><p><strong>16.Custom Source(自定义Source):</strong></p>
-<p>自定义Source是你实现Source接口。当启动Flume agent时，一个自定义source类和它依赖项必须在agent的classpath中。 </p>
-</li>
-<li><p><strong>17.Scrible Source:</strong></p>
-<p>Scribe是另一种类型的提取系统。采用现有的Scribe提取系统，Flume应该使用基于Thrift的兼容传输协议的ScribeSource。 </p>
-</li>
-</ul>
-<h3 id="2-3-Flume-Sinks"><a href="#2-3-Flume-Sinks" class="headerlink" title="2.3.Flume Sinks"></a>2.3.Flume Sinks</h3><p>参考：</p>
-<p><a href="http://www.cnblogs.com/swordfall/p/8157766.html" target="_blank" rel="noopener">http://www.cnblogs.com/swordfall/p/8157766.html</a></p>
-<p><a href="http://flume.apache.org/FlumeUserGuide.html" target="_blank" rel="noopener">http://flume.apache.org/FlumeUserGuide.html</a></p>
-<h4 id="2-3-1-Flume-Sinks-类型"><a href="#2-3-1-Flume-Sinks-类型" class="headerlink" title="2.3.1.Flume Sinks 类型"></a>2.3.1.Flume Sinks 类型</h4><ul>
-<li><strong>HDFS Sink:</strong> <code>该sink把events写进Hadoop分布式文件系统（HDFS）。它目前支持创建文本和序列文件。它支持在两种文件类型压缩。文件可以基于数据的经过时间或者大小或者事件的数量周期性地滚动。它还通过属性（如时间戳或发生事件的机器）把数据划分为桶或区。</code></li>
-<li><strong>Hive Sink:</strong> <code>该sink streams 将包含分割文本或者JSON数据的events直接传送到Hive表或分区中。使用Hive 事务写events。当一系列events提交到Hive时，它们马上可以被Hive查询到。</code></li>
-<li><strong>Logger Sink:</strong> <code>Logs event 在INFO 水平。典型用法是测试或者调试。</code></li>
-<li><strong>Avro Sink:</strong> <code>Flume events发送到sink，转换为Avro events，并发送到配置好的hostname/port。从配置好的channel按照配置好的批量大小批量获取events。</code></li>
-<li><strong>Thrift Sink:</strong> <code>Flume events发送到sink，转换为Thrift events，并发送到配置好的hostname/port。从配置好的channel按照配置好的批量大小批量获取events。</code></li>
-<li><strong>IRC Sink:</strong> <code>IRC sink从链接的channel获取消息和推送消息到配置的IRC目的地。</code></li>
-<li><strong>File Roll Sink:</strong> <code>在本地文件系统存储events。</code></li>
-<li><strong>Null Sink:</strong> <code>当接收到channel时丢弃所有events。</code></li>
-<li><strong>HBaseSinks:</strong> <code>该sink写数据到HBase。</code></li>
-<li><strong>AsyncHBaseSink:</strong> <code>该sink采用异步模式写数据到HBase。</code></li>
-<li><strong>MorphlineSolrSink:</strong> <code>该sink从Flume events提取数据并转换，在Apache Solr 服务端实时加载，Apache Solr servers为最终用户或者搜索应用程序提供查询服务。</code></li>
-<li><strong>ElasticSearchSink:</strong> <code>该sink写数据到elasticsearch集群。</code></li>
-<li><strong>Kite Dataset Sink:</strong> <code>试验sink写event到Kite Dataset。</code></li>
-<li><strong>Kafka Sink:</strong> <code>Flume Sink实现可以导出数据到一个Kafka topic。</code></li>
-<li><strong>HTTP Sink:</strong> <code>该sink将会从channel获取events，并使用HTTP POST请求发送这些events到远程服务。event 内容作为POST body发送。</code></li>
-<li><strong>Custom Sink:</strong> <code>自定义sink是你实现Sink接口。当启动Flume agent时，一个自定义sink类和它依赖项必须在agent的classpath中。</code></li>
-</ul>
-<h4 id="2-3-2-Flume-Sink-Processors"><a href="#2-3-2-Flume-Sink-Processors" class="headerlink" title="2.3.2.Flume Sink Processors"></a>2.3.2.Flume Sink Processors</h4><p>​    Sinks groups 允许用户把多个sinks分组汇入到一个实体中。Sink processors可以用于在组内所有sinks提供负载平衡，或者在暂时失败的情况下实现从一个sink到另一个sink的故障转移。 </p>
-<ul>
-<li><p><strong>Default Sink Processor</strong></p>
-<p>​    默认sink processor只接收一个简单sink。用户没有强制去为单个sinks创建processor(sink group)。相反，用户可以按照用户指南上解释的source - channel - sink 模式。 </p>
-</li>
-<li><p><strong>Failover Sink Processor</strong></p>
-<p>​    Failover Sink Processor 维护sinks的优先列表，保证当有可用的events将会被处理。 </p>
-</li>
-<li><p><strong>Load balancing Sink Processor</strong></p>
-<p>​    Load balancing sink processor 提供了对多个sinks进行负载平衡的能力。 </p>
-</li>
-</ul>
-<h4 id="2-3-3-Event-Serializers"><a href="#2-3-3-Event-Serializers" class="headerlink" title="2.3.3.Event Serializers"></a>2.3.3.Event Serializers</h4><p>file_roll sink和hdfs sink都支持EventSerializer接口。下面提供了Flume附带的EventSerializers的细节。 </p>
-<ul>
-<li><p><strong>Body Text Serializer</strong></p>
-<p>别名：text。拦截器将event的主体写入输出流，而没进行任何的转换或者修改。event header被忽略。配置选项： </p>
-</li>
-<li><p><strong>“Flume Event” Avro Event Serializer</strong></p>
-<p>别名：avro_event。</p>
-<p>拦截器将Flume events序列化成一个Avro容器文件。所使用的模式与Avro RPC机制中用于Flume events的模式相同。</p>
-<p>该serializer继承自AbstractAvroEventSerializer类。</p>
-</li>
-<li><p><strong>Avro Event Serializer</strong></p>
-<p>别名：该serializer没有别名，必须指定使用的类名。 </p>
-</li>
-</ul>
-<h3 id="2-4-Flume-Channel"><a href="#2-4-Flume-Channel" class="headerlink" title="2.4. Flume Channel"></a>2.4. Flume Channel</h3><p>参考：</p>
-<p><a href="http://www.cnblogs.com/swordfall/p/8169554.html" target="_blank" rel="noopener">http://www.cnblogs.com/swordfall/p/8169554.html</a></p>
-<p><a href="http://flume.apache.org/FlumeUserGuide.html" target="_blank" rel="noopener">http://flume.apache.org/FlumeUserGuide.html</a></p>
-<h4 id="2-4-1-Flume-Channel-类型"><a href="#2-4-1-Flume-Channel-类型" class="headerlink" title="2.4.1. Flume Channel 类型"></a>2.4.1. Flume Channel 类型</h4><ul>
-<li><p><strong>Memory Channel（内存Channels）</strong></p>
-<p>​    events存储在配置最大大小的内存队列中。对于流量较高和由于agent故障而准备丢失数据的流程来说，这是一个理想的选择。 </p>
-</li>
-<li><p><strong>JDBC Channel</strong></p>
-<p>​    events存储在持久化存储库中（其背后是一个数据库）。JDBC channel目前支持嵌入式Derby。这是一个持续的channel，对于可恢复性非常重要的流程来说是理想的选择。</p>
-</li>
-<li><p><strong>Kafka Channel</strong></p>
-<p>events存储在Kafka集群中。Kafka提供高可用性和高可靠性，所以当agent或者kafka broker 崩溃时，events能马上被其他sinks可用。</p>
-<p>Kafka channel可以被多个场景使用：</p>
-<ol>
-<li>Flume source和sink - 它为events提供可靠和高可用的channel</li>
-<li>Flume source和interceptor，但是没sink - 它允许写Flume evnets到Kafka topic</li>
-<li>Flume sink，但是没source - 这是一种低延迟，容错的方式从Kafka发送events到Flume sinks 例如 HDFS, HBase或者Solr</li>
-</ol>
-</li>
-<li><p><strong>File Channel</strong></p>
-</li>
-<li><p><strong>Spillable Memory Channel</strong></p>
-<p>events存储在内存队列和磁盘中。该channel目前正在试验中，不要求在生产环境中使用。 </p>
-</li>
-<li><p><strong>Pseudo Transaction Channel</strong></p>
-<p>注意：Pseudo Transaction Channel只用于单元测试，不用于生产环境使用。 </p>
-</li>
-<li><p><strong>Custom Channel</strong></p>
-<p>​    自定义channel是你实现Channel接口。当Flume agent启动时，一个自定义channel类和它依赖项必须包含在agent的classpath。</p>
-</li>
-</ul>
-<h4 id="2-4-2-Flume-Channel-Selectors"><a href="#2-4-2-Flume-Channel-Selectors" class="headerlink" title="2.4.2.Flume Channel Selectors"></a>2.4.2.Flume Channel Selectors</h4><p>如果类型没有指定，那么默认“replicating”。 </p>
-<ul>
-<li><p><strong>Replicating Channel Selector(default) (复制channel选择器)</strong></p>
-</li>
-<li><p><strong>Multiplexing Channel Selector （多路复用Channel选择器）</strong></p>
-</li>
-<li><p><strong>Custom Channel Selector (自定义Channel选择器)</strong></p>
-<p>一个自定义channel选择器（selector）是实现ChannelSelector的接口。当Flume agent启动时，一个自定义channel  selector类和它依赖项必须包含在agent的classpath。 </p>
-</li>
-</ul>
-<h3 id="2-5-Flume-Interceptors（拦截器）"><a href="#2-5-Flume-Interceptors（拦截器）" class="headerlink" title="2.5.Flume Interceptors（拦截器）"></a>2.5.Flume Interceptors（拦截器）</h3><p>参考：</p>
-<p><a href="http://www.cnblogs.com/swordfall/p/8207880.html" target="_blank" rel="noopener">http://www.cnblogs.com/swordfall/p/8207880.html</a></p>
-<p><a href="http://flume.apache.org/FlumeUserGuide.html" target="_blank" rel="noopener">http://flume.apache.org/FlumeUserGuide.html</a></p>
-<p>​    Flume有能力修改/删除流程中的events。这是在拦截器（interceptor）的帮助下完成的。拦截器（Interceptors）是实现org.apache.flume.interceptor.Interceptor接口的类。一个interceptor可以根据interceptor的开发者选择的任何标准来修改，甚至放弃events。这个可以通过在配置中指定一系列interceptor生成类名来实现。Interceptors在source配置中被指定作为空白分隔符列表。如果interceptor需要放弃events，它不会在它需要返回的列表中返回该events。如果interceptor放弃全部events，然后它返回一个空列表。简单示例： </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">a1.sources = r1</span><br><span class="line">a1.sinks = k1</span><br><span class="line">a1.channels = c1</span><br><span class="line">a1.sources.r1.interceptors = i1 i2</span><br><span class="line">a1.sources.r1.interceptors.i1.type = org.apache.flume.interceptor.HostInterceptor$Builder</span><br><span class="line">a1.sources.r1.interceptors.i1.preserveExisting = false</span><br><span class="line">a1.sources.r1.interceptors.i1.hostHeader = hostname</span><br><span class="line">a1.sources.r1.interceptors.i2.type = org.apache.flume.interceptor.TimestampInterceptor$Builder</span><br><span class="line">a1.sinks.k1.filePrefix = FlumeData.%&#123;CollectorHost&#125;.%Y-%m-%d</span><br><span class="line">a1.sinks.k1.channel = c1</span><br></pre></td></tr></table></figure>
-<p>​    注意：该interceptor构建是被传递给type配置属性。interceptors本身是可配置的，并且可以像传递给其他可配置组件一样传递配置值。在上述示例中，events先传递到HostInterceptor，并且events被HostInterceptor返回，然后独自传递到TimestampInterceptor。你可以指定完全限定的类名称或者别名 timestamp。如果你有多个收集器写到同一个HDFS路径，然后你也可以使用HostInterceptor。 </p>
-<h4 id="2-5-1-Flume-Interceptors-种类"><a href="#2-5-1-Flume-Interceptors-种类" class="headerlink" title="2.5.1.Flume Interceptors 种类"></a>2.5.1.Flume Interceptors 种类</h4><ul>
-<li><p><strong>Timestamp Interceptor</strong></p>
-<p>该interceptor向event headers插入秒级时间，当event被处理时。该interceptor插入一个带有关键timestamp（或者由header属性指定）的header，其值是相关的timestamp。该interceptors可以保留一个已存在timestamp，如果它已经在配置中预先配置。 </p>
-</li>
-<li><p><strong>Host Interceptor</strong></p>
-<p>该interceptor插入运行agent的host的hostname或者IP地址。它根据配置插入带有密钥host或配置密钥（其值为host的hostname或IP地址）的header。 </p>
-</li>
-<li><p><strong>Static Interceptor</strong></p>
-<p>静态interceptor运行用户给所有events添加一个带有静态值的静态header。 </p>
-</li>
-<li><p><strong>Remove Header Interceptor</strong></p>
-<p>该interceptor通过移除一个或多个headers来操作Flume event headers。它可以移除一个静态定义的header，基于规则表达式的headers或者在一个列表中的headers。如果这些没有定义，或者如果没有header匹配到标准，Flume events将不会修改。</p>
-<p>注意：如果只有一个header需要移除，通过名字指定它可以提供比其他两种方法更好的性能。</p>
-</li>
-<li><p><strong>UUID Interceptor</strong></p>
-<p>该interceptor在被拦截的所有事件上设置一个通用唯一的标识符。 </p>
-</li>
-<li><p><strong>Morphline Interceptor</strong></p>
-<p>该interceptor通过morphline配置文件过滤events，该配置文件定义了一条从一个命令到另一个命令管道记录的转换命令链。例如，morphline可以忽略某些events，或者通过基于正则表达式的模式匹配来改变或者插入某些event headers，或者它可以通过Apache Tika自动检测和设置一个MIME类型在被拦截的events上。 </p>
-</li>
-<li><p><strong>Search and Replace Interceptor</strong></p>
-<p>该interceptor提供了基于Java正则表达式的简单的基于字符串的search-and-replace功能。回溯/组捕获也是可用的。这个interceptor使用与Java Matcher.replaceAll()方法相同的规则。 </p>
-</li>
-<li><p><strong>Regex Flitering Interceptor</strong></p>
-<p>该拦截器通过将event正文解释为文本并将文本与配置的正则表达式进行匹配来选择性地过滤events。 </p>
-</li>
-<li><p><strong>Regex Extractor Interceptor</strong></p>
-<p>此interceptor使用指定的正则表达式提取正则表达式匹配组，并将匹配组附加为event的headers。 </p>
-<p>该serializers用于将匹配映射到header名称和格式化的header值；默认的，你只需要指定header名称和默认org.apache.flume.interceptor.RegexExtractorInterceptorPassThroughSerializer将会被使用。这个serializer只是将匹配映射到指定的header名称，并传递通过由正则表达式提取的值。 </p>
-</li>
-</ul>
-<h2 id="3-Flume安装"><a href="#3-Flume安装" class="headerlink" title="3.Flume安装"></a>3.Flume安装</h2><h3 id="3-1-JDK下载安装"><a href="#3-1-JDK下载安装" class="headerlink" title="3.1.JDK下载安装"></a>3.1.JDK下载安装</h3><ul>
-<li>下载对应版本JavaSDK，下载地址：<a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank" rel="noopener">http://www.oracle.com/technetwork/java/javase/downloads/index.html</a></li>
-<li>解压jdk到/usr/local目录下</li>
-<li>配置环境变量</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/profile</span><br><span class="line"><span class="meta">#</span><span class="bash"> 在最后面添加如下几行</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="keyword">for</span> jdk</span></span><br><span class="line">export JAVA_HOME=/usr/local/jdk1.8.0_171</span><br><span class="line">export PATH=$PATH:$JAVA_HOME/bin</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 使环境变量生效</span></span><br><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
-<h3 id="3-2-Flume下载安装"><a href="#3-2-Flume下载安装" class="headerlink" title="3.2.Flume下载安装"></a>3.2.Flume下载安装</h3><ul>
-<li>下载二进制包，下载地址：<a href="http://flume.apache.org/download.html" target="_blank" rel="noopener">http://flume.apache.org/download.html</a></li>
-<li>下载校验文件，文件名*.asc, 下载地址：<a href="http://flume.apache.org/download.html" target="_blank" rel="noopener">http://flume.apache.org/download.html</a></li>
-<li>下载KEYS，地址：<a href="http://www.apache.org/dist/flume/KEYS" target="_blank" rel="noopener">http://www.apache.org/dist/flume/KEYS</a></li>
-<li>校验下载的二进制包</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">gpg --import KEYS</span><br><span class="line">gpg --verify apache-flume-1.8.0-bin.tar.gz.asc</span><br><span class="line"></span><br><span class="line">gpg: Signature made Fri 15 Sep 2017 09:04:39 PM CST using RSA key ID 4199ACFF</span><br><span class="line">gpg: Good signature from "Denes Arvay &lt;denes@apache.org&gt;"</span><br><span class="line">gpg: WARNING: This key is not certified with a trusted signature!</span><br><span class="line">gpg:          There is no indication that the signature belongs to the owner.</span><br><span class="line">Primary key fingerprint: 4CF1 5CF1 525F CE29 F66C  08FA 302C B2A8 4199 ACFF</span><br></pre></td></tr></table></figure>
-<ul>
-<li>解压二进制包到/usr/local目录下，目录结构如下</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">├── bin</span><br><span class="line">├── conf</span><br><span class="line">├── lib</span><br><span class="line">├── logs</span><br><span class="line">└── tools</span><br></pre></td></tr></table></figure>
-<ul>
-<li>配置Flume</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cp conf/flume-env.sh.template conf/flume-env.sh</span><br><span class="line">vim conf/flume-env.sh</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 打开这两行注释，改成实际需要的参数</span></span><br><span class="line">export JAVA_HOME=/usr/local/jdk1.8.0_171</span><br><span class="line">export JAVA_OPTS="-Xms1024m -Xmx1024m -Dcom.sun.management.jmxremote"</span><br></pre></td></tr></table></figure>
-<h2 id="4-高可用Flume-NG集群搭建-："><a href="#4-高可用Flume-NG集群搭建-：" class="headerlink" title="4.高可用Flume NG集群搭建 ："></a>4.高可用Flume NG集群搭建 ：</h2><p>参考：</p>
-<p><a href="https://www.cnblogs.com/smartloli/p/4468708.html" target="_blank" rel="noopener">https://www.cnblogs.com/smartloli/p/4468708.html</a></p>
-<h3 id="4-1节点分配"><a href="#4-1节点分配" class="headerlink" title="4.1节点分配"></a>4.1节点分配</h3><table>
-<thead>
-<tr>
-<th>名称</th>
-<th>Host</th>
-<th>角色</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Agent1</td>
-<td>epp-nginx-001v</td>
-<td>Web Server</td>
-</tr>
-<tr>
-<td>Agent2</td>
-<td>epp-nginx-002v</td>
-<td>Web Server</td>
-</tr>
-<tr>
-<td>Collector1</td>
-<td>bi-slave1</td>
-<td>AgentMstr1</td>
-</tr>
-<tr>
-<td>Collector2</td>
-<td>bi-slave2</td>
-<td>AgentMstr2</td>
-</tr>
-</tbody>
-</table>
-<p>Agent1，Agent2数据分别流入到Collector1和Collector2，Flume NG本身提供了Failover机制，可以自动切换和恢复。要把所有的日志都收集到一个集群中存储。</p>
-<h3 id="4-2-配置"><a href="#4-2-配置" class="headerlink" title="4.2.配置"></a>4.2.配置</h3><ul>
-<li>Agent1和Agent2的配置相同：</li>
-</ul>
-<p>flume-client.conf</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">a1.sources = r1</span><br><span class="line">a1.sinks = k1 k2</span><br><span class="line">a1.channels = c1</span><br><span class="line"></span><br><span class="line">a1.sources.r1.channels = c1</span><br><span class="line">a1.sources.r1.type = taildir</span><br><span class="line">a1.sources.r1.positionFile = /data/logs/flume/taildir_position.json</span><br><span class="line">a1.sources.r1.filegroups = f1</span><br><span class="line">a1.sources.r1.filegroups.f1 = /usr/local/nginx/logs/ecloud.belle.cn.access.log</span><br><span class="line">a1.sources.r1.fileHeader = true</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">a1.sinks.k1.channel = c1</span><br><span class="line">a1.sinkgroups = g1 </span><br><span class="line">a1.sinkgroups.g1.sinks = k1 k2</span><br><span class="line">a1.sinks.k1.type = avro</span><br><span class="line">a1.sinks.k1.hostname = bi-slave1</span><br><span class="line">a1.sinks.k1.port = 10000</span><br><span class="line">a1.sinks.k1.batch-size = 1000</span><br><span class="line">a1.sinks.k2.channel = c1</span><br><span class="line">a1.sinks.k2.type = avro</span><br><span class="line">a1.sinks.k2.hostname = bi-slave2</span><br><span class="line">a1.sinks.k2.port = 10000</span><br><span class="line">a1.sinks.k2.batch-size = 1000</span><br><span class="line">a1.sinkgroups.g1.processor.type = failover</span><br><span class="line">a1.sinkgroups.g1.processor.priority.k1 = 10</span><br><span class="line">a1.sinkgroups.g1.processor.priority.k2 = 1</span><br><span class="line">a1.sinkgroups.g1.processor.maxpenalty = 10000</span><br><span class="line"></span><br><span class="line">a1.channels.c1.type = memory</span><br><span class="line">a1.channels.c1.capacity = 5000</span><br><span class="line">a1.channels.c1.transactionCapacity = 5000</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Collector1和Collector2下沉到使用kerboros安全认证的CDH集群HDFS中配置</li>
-</ul>
-<p>bi-slave1:  nginxlog.sources.r1.bind = bi-slave1</p>
-<p>bi-slave1:  nginxlog.sources.r1.bind = bi-slave2</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">nginxlog.sinks = k1</span><br><span class="line">nginxlog.channels = c1</span><br><span class="line"></span><br><span class="line">nginxlog.sources.r1.channels = c1</span><br><span class="line">nginxlog.sources.r1.type = avro</span><br><span class="line">nginxlog.sources.r1.channels = c1</span><br><span class="line">nginxlog.sources.r1.bind = bi-slave1</span><br><span class="line">nginxlog.sources.r1.port = 10000</span><br><span class="line"></span><br><span class="line">nginxlog.sinks.k1.channel = c1</span><br><span class="line">nginxlog.sinks.k1.type = hdfs</span><br><span class="line">nginxlog.sinks.k1.hdfs.kerberosPrincipal = hdfs/bi-slave1</span><br><span class="line">nginxlog.sinks.k1.hdfs.kerberosKeytab = /usr/flume-keytab/hdfs.keytab</span><br><span class="line">nginxlog.sinks.k1.hdfs.path = /flume/events/%y-%m-%d</span><br><span class="line">nginxlog.sinks.k1.hdfs.filePrefix = events</span><br><span class="line">nginxlog.sinks.k1.hdfs.round = true</span><br><span class="line">nginxlog.sinks.k1.hdfs.roundValue = 24</span><br><span class="line">nginxlog.sinks.k1.hdfs.roundUnit = hour</span><br><span class="line">nginxlog.sinks.k1.hdfs.rollInterval = 600</span><br><span class="line">nginxlog.sinks.k1.hdfs.rollSize = 268435456</span><br><span class="line">nginxlog.sinks.k1.hdfs.rollCount = 2000</span><br><span class="line">nginxlog.sinks.k1.hdfs.batchSize = 1000</span><br><span class="line">nginxlog.sinks.k1.hdfs.useLocalTimeStamp = true</span><br><span class="line">nginxlog.sinks.k1.hdfs.fileType = DataStream</span><br><span class="line"></span><br><span class="line">nginxlog.channels.c1.type = memory</span><br><span class="line">nginxlog.channels.c1.capacity = 5000</span><br><span class="line">nginxlog.channels.c1.transactionCapacity = 5000</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Collector1和Collector2下沉到使用kerboros安全认证的CDH集群kafka中配置</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">nginxlog.sources = r1</span><br><span class="line">nginxlog.sinks = k1</span><br><span class="line">nginxlog.channels = c1</span><br><span class="line"></span><br><span class="line">nginxlog.sources.r1.channels = c1</span><br><span class="line">nginxlog.sources.r1.type = avro</span><br><span class="line">nginxlog.sources.r1.channels = c1</span><br><span class="line">nginxlog.sources.r1.bind = bi-slave1</span><br><span class="line">nginxlog.sources.r1.port = 10000</span><br><span class="line"></span><br><span class="line">nginxlog.sinks.k1.channel = c1</span><br><span class="line">nginxlog.sinks.k1.type = org.apache.flume.sink.kafka.KafkaSink</span><br><span class="line">nginxlog.sinks.k1.kafka.producer.security.protocol = SASL_PLAINTEXT</span><br><span class="line">nginxlog.sinks.k1.kafka.producer.sasl.kerberos.service.name = kafka</span><br><span class="line">nginxlog.sinks.k1.kafka.producer.group.id = flume-producer</span><br><span class="line">nginxlog.sinks.k1.kafka.topic = nginxlog</span><br><span class="line">nginxlog.sinks.k1.kafka.bootstrap.servers = 172.17.194.17:9092,172.17.194.18:9092,172.17.194.20:9092</span><br><span class="line">nginxlog.sinks.k1.kafka.flumeBatchSize = 1000</span><br><span class="line"></span><br><span class="line">nginxlog.channels.c1.type = memory</span><br><span class="line">nginxlog.channels.c1.capacity = 5000</span><br><span class="line">nginxlog.channels.c1.transactionCapacity = 5000</span><br></pre></td></tr></table></figure>
-<h3 id="4-3-启动"><a href="#4-3-启动" class="headerlink" title="4.3.启动"></a>4.3.启动</h3><ul>
-<li>在Agent节点上启动命令如下所示： </li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/flume-ng agent -c conf -f conf/flume-client.conf -n a1 -Dflume.root.logger=INFO,console &gt;&gt; /data/logs/flume/flume_client.log 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>CDH集群上修改bi-slave1和bi-slave2的配置后重启两个节点</li>
-</ul>
-<h3 id="4-4-Failover测试"><a href="#4-4-Failover测试" class="headerlink" title="4.4.Failover测试"></a>4.4.Failover测试</h3><p>在CDH集群中停止bi-slave1的Flume NG服务，查看bi-slave1、bi-slave2的日志，并检查数据的完整性，结果：bi-slave1服务结束后，flume采集的下沉任务到bi-slave2上了，且数据衔接上了。</p>
-<p>bi-slave1恢复服务后，flume采集的下沉任务又回到了bi-slave1上了。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/16/Centos7下部署CDH6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2058,6 +1643,421 @@
 <li>完成安装</li>
 </ul>
 <p><img src="images/cdh06.png" alt></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/16/Flume/Flume学习笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lynnyq">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lynnyq">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/02/16/Flume/Flume学习笔记/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-16T23:32:13+08:00">
+                2019-02-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Flume笔记"><a href="#Flume笔记" class="headerlink" title="Flume笔记"></a>Flume笔记</h1><p>[TOC]</p>
+<h2 id="1-Flume概述"><a href="#1-Flume概述" class="headerlink" title="1.Flume概述"></a>1.Flume概述</h2><p>​    Flume NG是一个分布式，高可用，可靠的系统，它能将不同的海量数据收集，移动并存储到一个数据存储系统中。轻量，配置简单，适用于各种日志收集，并支持Failover和负载均衡。并且它拥有非常丰富的组件。Flume NG采用的是三层架构：Agent层，Collector层和Store层，每一层均可水平拓展。其中Agent包含Source，Channel和Sink，三者组建了一个Agent。三者的职责如下所示： </p>
+<ul>
+<li><strong>Source：</strong>用来消费（收集）数据源到Channel组件中</li>
+<li><strong>Channel：</strong>中转临时存储，保存所有Source组件信息</li>
+<li><strong>Sink：</strong>从Channel中读取，读取成功后会删除Channel中的信息</li>
+</ul>
+<p>下图是Flume NG的架构图：</p>
+<p><img src="images/01.png" alt="架构图"> </p>
+<h2 id="2-Flume介绍"><a href="#2-Flume介绍" class="headerlink" title="2.Flume介绍"></a>2.Flume介绍</h2><p>Flume用户手册：<a href="http://flume.apache.org/FlumeUserGuide.html" target="_blank" rel="noopener">http://flume.apache.org/FlumeUserGuide.html</a></p>
+<p>Flume开发者手册：<a href="http://flume.apache.org/FlumeDeveloperGuide.html" target="_blank" rel="noopener">http://flume.apache.org/FlumeDeveloperGuide.html</a></p>
+<h3 id="2-1-Flume采集系统结构图"><a href="#2-1-Flume采集系统结构图" class="headerlink" title="2.1.Flume采集系统结构图"></a>2.1.Flume采集系统结构图</h3><ul>
+<li>简单结构：单个agent采集数据</li>
+</ul>
+<p><img src="images/02.png" alt="单个agent"></p>
+<ul>
+<li>复杂结构：多级agent之间串联</li>
+</ul>
+<p><img src="images/03.png" alt="多级agent"></p>
+<ul>
+<li>高可用Flume NG集群 ：</li>
+</ul>
+<p><img src="images/04.png" alt="Flume NG集群"></p>
+<p><code>Flume的存储可以支持多种，这里只列举了HDFS和Kafka（如：存储最新的一周日志，并给Storm系统提供实时日志流）</code></p>
+<h3 id="2-2-Flume-Sources"><a href="#2-2-Flume-Sources" class="headerlink" title="2.2.Flume Sources"></a>2.2.Flume Sources</h3><p>参考：</p>
+<p><a href="https://www.cnblogs.com/swordfall/p/8254271.html" target="_blank" rel="noopener">https://www.cnblogs.com/swordfall/p/8254271.html</a></p>
+<p><a href="http://flume.apache.org/FlumeUserGuide.html" target="_blank" rel="noopener">http://flume.apache.org/FlumeUserGuide.html</a></p>
+<h4 id="2-2-1-Flume-Sources-类型"><a href="#2-2-1-Flume-Sources-类型" class="headerlink" title="2.2.1.Flume Sources 类型"></a>2.2.1.Flume Sources 类型</h4><p>官网文档上要求的属性是粗体字。</p>
+<ul>
+<li><p><strong>1.Avro Source:</strong></p>
+<p>监听Avro端口，从Avro client streams接收events。 </p>
+</li>
+<li><p><strong>2.Thrift Source：</strong></p>
+<p>监听Thrift端口和从外部Thrift client streams接收events。 </p>
+</li>
+<li><p><strong>3.Exec Source:</strong></p>
+<p>Exec Source在启动时运行一个Unix命令行，并期望这过程在标准输出上连续生产数据。 </p>
+</li>
+<li><p><strong>4.JMS Source：</strong></p>
+<p>JMS Source从JMS目标（如队列或者主题）读取消息。JMS应用程序应该可以与任何JMS提供程序一起工作，但是只能使用ActiveMQ进行测试。 </p>
+</li>
+<li><p><strong>5.Spooling Directory Source:</strong></p>
+<p>该source让你通过放置被提取文件在磁盘”spooling“目录下这一方式，提取数据。该source将会监控指定目录的新增文件，当新文件出现时解析event。event解析逻辑是可插入的。当一个给定文件被全部读取进channel之后，它被重命名，以标识为已完成（或者可选择deleted）。 </p>
+</li>
+<li><p><strong>6.Taildir Source:</strong></p>
+<p>注意：该source不能用于windows。 </p>
+</li>
+<li><p><strong>7.Twitter 1% firehose Source(试验):</strong></p>
+</li>
+<li><p><strong>8.Kafka Source:</strong></p>
+<p>Kafka Source是Apache Kafka消费者，从Kfaka topics读取消息。如果你有多个Kafka source在跑，你可以配置它们在相同的Consumer Group，以使它们每个读取topics独特的分区。 </p>
+</li>
+<li><p><strong>9.NetCat TCP Source:</strong></p>
+<p>netcat source监听一个给定的端口，然后把text文件的每一行转换成一个event。要求属性是粗体字。 </p>
+</li>
+<li><p><strong>10.NetCat UDP Source:</strong></p>
+<p>netcat source监听一个给定的端口，然后把text文件的每一行转换成一个event。 </p>
+</li>
+<li><p><strong>11.Sequence Generator Source:</strong></p>
+<p>一个简单的序列生成器可以不断生成events，带有counter计数器，从0开始，以1递增，在totalEvents停止。当不能发送events到channels时会不断尝试。 </p>
+</li>
+<li><p><strong>12.Syslog Sources:</strong></p>
+<p>读取系统日志，并生成Flume events。UDP source以整条消息作为一个简单event。TCP source以新一行”n“分割的字符串作为一个新的event。 </p>
+<ul>
+<li><strong>Syslog TCP Source :</strong><code>原始的，可靠的Syslog TCP source。</code></li>
+<li><strong>Multiport Syslog TCP Source:</strong><code>这是一个新的，更快的，多端口的Syslog TCP source版本。注意ports配置替代port。</code></li>
+<li><strong>Syslog UDP Source:</strong></li>
+</ul>
+</li>
+<li><p><strong>13.HTTP Source:</strong></p>
+<p>source 通过HTTP POST 和 GET，接收Flume events。GET只能用于试验。HTTP requests通过 必须实现 HTTPSourceHandler接口的 ”handler“ 转换成flume events。该handler获取HttpServletRequest，然后返回一系列的flume events。 </p>
+</li>
+<li><p><strong>14.Stress Source:</strong></p>
+<p>StressSource 是内部负载生成source的实现，这对于压力测试是非常有用的。它允许用户配置Event有效载荷的大小。 </p>
+</li>
+<li><p><strong>15.Legacy Sources:</strong></p>
+<p>Legacy sources允许Flume 1.x agent接收来自Flume 0.9.4 agents的events。legacy source 支持Avro和Thrift RPC 连接。为了使用两个Flume 版本搭建的桥梁，你需要开始一个带有avroLegacy或者thriftLegacy source的Flume 1.x agent。0.9.4agent应该有agent Sink指向1.x agent的host/port。</p>
+<ul>
+<li>Avro Legacy Source</li>
+<li>Thrift Legacy Source</li>
+</ul>
+</li>
+<li><p><strong>16.Custom Source(自定义Source):</strong></p>
+<p>自定义Source是你实现Source接口。当启动Flume agent时，一个自定义source类和它依赖项必须在agent的classpath中。 </p>
+</li>
+<li><p><strong>17.Scrible Source:</strong></p>
+<p>Scribe是另一种类型的提取系统。采用现有的Scribe提取系统，Flume应该使用基于Thrift的兼容传输协议的ScribeSource。 </p>
+</li>
+</ul>
+<h3 id="2-3-Flume-Sinks"><a href="#2-3-Flume-Sinks" class="headerlink" title="2.3.Flume Sinks"></a>2.3.Flume Sinks</h3><p>参考：</p>
+<p><a href="http://www.cnblogs.com/swordfall/p/8157766.html" target="_blank" rel="noopener">http://www.cnblogs.com/swordfall/p/8157766.html</a></p>
+<p><a href="http://flume.apache.org/FlumeUserGuide.html" target="_blank" rel="noopener">http://flume.apache.org/FlumeUserGuide.html</a></p>
+<h4 id="2-3-1-Flume-Sinks-类型"><a href="#2-3-1-Flume-Sinks-类型" class="headerlink" title="2.3.1.Flume Sinks 类型"></a>2.3.1.Flume Sinks 类型</h4><ul>
+<li><strong>HDFS Sink:</strong> <code>该sink把events写进Hadoop分布式文件系统（HDFS）。它目前支持创建文本和序列文件。它支持在两种文件类型压缩。文件可以基于数据的经过时间或者大小或者事件的数量周期性地滚动。它还通过属性（如时间戳或发生事件的机器）把数据划分为桶或区。</code></li>
+<li><strong>Hive Sink:</strong> <code>该sink streams 将包含分割文本或者JSON数据的events直接传送到Hive表或分区中。使用Hive 事务写events。当一系列events提交到Hive时，它们马上可以被Hive查询到。</code></li>
+<li><strong>Logger Sink:</strong> <code>Logs event 在INFO 水平。典型用法是测试或者调试。</code></li>
+<li><strong>Avro Sink:</strong> <code>Flume events发送到sink，转换为Avro events，并发送到配置好的hostname/port。从配置好的channel按照配置好的批量大小批量获取events。</code></li>
+<li><strong>Thrift Sink:</strong> <code>Flume events发送到sink，转换为Thrift events，并发送到配置好的hostname/port。从配置好的channel按照配置好的批量大小批量获取events。</code></li>
+<li><strong>IRC Sink:</strong> <code>IRC sink从链接的channel获取消息和推送消息到配置的IRC目的地。</code></li>
+<li><strong>File Roll Sink:</strong> <code>在本地文件系统存储events。</code></li>
+<li><strong>Null Sink:</strong> <code>当接收到channel时丢弃所有events。</code></li>
+<li><strong>HBaseSinks:</strong> <code>该sink写数据到HBase。</code></li>
+<li><strong>AsyncHBaseSink:</strong> <code>该sink采用异步模式写数据到HBase。</code></li>
+<li><strong>MorphlineSolrSink:</strong> <code>该sink从Flume events提取数据并转换，在Apache Solr 服务端实时加载，Apache Solr servers为最终用户或者搜索应用程序提供查询服务。</code></li>
+<li><strong>ElasticSearchSink:</strong> <code>该sink写数据到elasticsearch集群。</code></li>
+<li><strong>Kite Dataset Sink:</strong> <code>试验sink写event到Kite Dataset。</code></li>
+<li><strong>Kafka Sink:</strong> <code>Flume Sink实现可以导出数据到一个Kafka topic。</code></li>
+<li><strong>HTTP Sink:</strong> <code>该sink将会从channel获取events，并使用HTTP POST请求发送这些events到远程服务。event 内容作为POST body发送。</code></li>
+<li><strong>Custom Sink:</strong> <code>自定义sink是你实现Sink接口。当启动Flume agent时，一个自定义sink类和它依赖项必须在agent的classpath中。</code></li>
+</ul>
+<h4 id="2-3-2-Flume-Sink-Processors"><a href="#2-3-2-Flume-Sink-Processors" class="headerlink" title="2.3.2.Flume Sink Processors"></a>2.3.2.Flume Sink Processors</h4><p>​    Sinks groups 允许用户把多个sinks分组汇入到一个实体中。Sink processors可以用于在组内所有sinks提供负载平衡，或者在暂时失败的情况下实现从一个sink到另一个sink的故障转移。 </p>
+<ul>
+<li><p><strong>Default Sink Processor</strong></p>
+<p>​    默认sink processor只接收一个简单sink。用户没有强制去为单个sinks创建processor(sink group)。相反，用户可以按照用户指南上解释的source - channel - sink 模式。 </p>
+</li>
+<li><p><strong>Failover Sink Processor</strong></p>
+<p>​    Failover Sink Processor 维护sinks的优先列表，保证当有可用的events将会被处理。 </p>
+</li>
+<li><p><strong>Load balancing Sink Processor</strong></p>
+<p>​    Load balancing sink processor 提供了对多个sinks进行负载平衡的能力。 </p>
+</li>
+</ul>
+<h4 id="2-3-3-Event-Serializers"><a href="#2-3-3-Event-Serializers" class="headerlink" title="2.3.3.Event Serializers"></a>2.3.3.Event Serializers</h4><p>file_roll sink和hdfs sink都支持EventSerializer接口。下面提供了Flume附带的EventSerializers的细节。 </p>
+<ul>
+<li><p><strong>Body Text Serializer</strong></p>
+<p>别名：text。拦截器将event的主体写入输出流，而没进行任何的转换或者修改。event header被忽略。配置选项： </p>
+</li>
+<li><p><strong>“Flume Event” Avro Event Serializer</strong></p>
+<p>别名：avro_event。</p>
+<p>拦截器将Flume events序列化成一个Avro容器文件。所使用的模式与Avro RPC机制中用于Flume events的模式相同。</p>
+<p>该serializer继承自AbstractAvroEventSerializer类。</p>
+</li>
+<li><p><strong>Avro Event Serializer</strong></p>
+<p>别名：该serializer没有别名，必须指定使用的类名。 </p>
+</li>
+</ul>
+<h3 id="2-4-Flume-Channel"><a href="#2-4-Flume-Channel" class="headerlink" title="2.4. Flume Channel"></a>2.4. Flume Channel</h3><p>参考：</p>
+<p><a href="http://www.cnblogs.com/swordfall/p/8169554.html" target="_blank" rel="noopener">http://www.cnblogs.com/swordfall/p/8169554.html</a></p>
+<p><a href="http://flume.apache.org/FlumeUserGuide.html" target="_blank" rel="noopener">http://flume.apache.org/FlumeUserGuide.html</a></p>
+<h4 id="2-4-1-Flume-Channel-类型"><a href="#2-4-1-Flume-Channel-类型" class="headerlink" title="2.4.1. Flume Channel 类型"></a>2.4.1. Flume Channel 类型</h4><ul>
+<li><p><strong>Memory Channel（内存Channels）</strong></p>
+<p>​    events存储在配置最大大小的内存队列中。对于流量较高和由于agent故障而准备丢失数据的流程来说，这是一个理想的选择。 </p>
+</li>
+<li><p><strong>JDBC Channel</strong></p>
+<p>​    events存储在持久化存储库中（其背后是一个数据库）。JDBC channel目前支持嵌入式Derby。这是一个持续的channel，对于可恢复性非常重要的流程来说是理想的选择。</p>
+</li>
+<li><p><strong>Kafka Channel</strong></p>
+<p>events存储在Kafka集群中。Kafka提供高可用性和高可靠性，所以当agent或者kafka broker 崩溃时，events能马上被其他sinks可用。</p>
+<p>Kafka channel可以被多个场景使用：</p>
+<ol>
+<li>Flume source和sink - 它为events提供可靠和高可用的channel</li>
+<li>Flume source和interceptor，但是没sink - 它允许写Flume evnets到Kafka topic</li>
+<li>Flume sink，但是没source - 这是一种低延迟，容错的方式从Kafka发送events到Flume sinks 例如 HDFS, HBase或者Solr</li>
+</ol>
+</li>
+<li><p><strong>File Channel</strong></p>
+</li>
+<li><p><strong>Spillable Memory Channel</strong></p>
+<p>events存储在内存队列和磁盘中。该channel目前正在试验中，不要求在生产环境中使用。 </p>
+</li>
+<li><p><strong>Pseudo Transaction Channel</strong></p>
+<p>注意：Pseudo Transaction Channel只用于单元测试，不用于生产环境使用。 </p>
+</li>
+<li><p><strong>Custom Channel</strong></p>
+<p>​    自定义channel是你实现Channel接口。当Flume agent启动时，一个自定义channel类和它依赖项必须包含在agent的classpath。</p>
+</li>
+</ul>
+<h4 id="2-4-2-Flume-Channel-Selectors"><a href="#2-4-2-Flume-Channel-Selectors" class="headerlink" title="2.4.2.Flume Channel Selectors"></a>2.4.2.Flume Channel Selectors</h4><p>如果类型没有指定，那么默认“replicating”。 </p>
+<ul>
+<li><p><strong>Replicating Channel Selector(default) (复制channel选择器)</strong></p>
+</li>
+<li><p><strong>Multiplexing Channel Selector （多路复用Channel选择器）</strong></p>
+</li>
+<li><p><strong>Custom Channel Selector (自定义Channel选择器)</strong></p>
+<p>一个自定义channel选择器（selector）是实现ChannelSelector的接口。当Flume agent启动时，一个自定义channel  selector类和它依赖项必须包含在agent的classpath。 </p>
+</li>
+</ul>
+<h3 id="2-5-Flume-Interceptors（拦截器）"><a href="#2-5-Flume-Interceptors（拦截器）" class="headerlink" title="2.5.Flume Interceptors（拦截器）"></a>2.5.Flume Interceptors（拦截器）</h3><p>参考：</p>
+<p><a href="http://www.cnblogs.com/swordfall/p/8207880.html" target="_blank" rel="noopener">http://www.cnblogs.com/swordfall/p/8207880.html</a></p>
+<p><a href="http://flume.apache.org/FlumeUserGuide.html" target="_blank" rel="noopener">http://flume.apache.org/FlumeUserGuide.html</a></p>
+<p>​    Flume有能力修改/删除流程中的events。这是在拦截器（interceptor）的帮助下完成的。拦截器（Interceptors）是实现org.apache.flume.interceptor.Interceptor接口的类。一个interceptor可以根据interceptor的开发者选择的任何标准来修改，甚至放弃events。这个可以通过在配置中指定一系列interceptor生成类名来实现。Interceptors在source配置中被指定作为空白分隔符列表。如果interceptor需要放弃events，它不会在它需要返回的列表中返回该events。如果interceptor放弃全部events，然后它返回一个空列表。简单示例： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">a1.sources = r1</span><br><span class="line">a1.sinks = k1</span><br><span class="line">a1.channels = c1</span><br><span class="line">a1.sources.r1.interceptors = i1 i2</span><br><span class="line">a1.sources.r1.interceptors.i1.type = org.apache.flume.interceptor.HostInterceptor$Builder</span><br><span class="line">a1.sources.r1.interceptors.i1.preserveExisting = false</span><br><span class="line">a1.sources.r1.interceptors.i1.hostHeader = hostname</span><br><span class="line">a1.sources.r1.interceptors.i2.type = org.apache.flume.interceptor.TimestampInterceptor$Builder</span><br><span class="line">a1.sinks.k1.filePrefix = FlumeData.%&#123;CollectorHost&#125;.%Y-%m-%d</span><br><span class="line">a1.sinks.k1.channel = c1</span><br></pre></td></tr></table></figure>
+<p>​    注意：该interceptor构建是被传递给type配置属性。interceptors本身是可配置的，并且可以像传递给其他可配置组件一样传递配置值。在上述示例中，events先传递到HostInterceptor，并且events被HostInterceptor返回，然后独自传递到TimestampInterceptor。你可以指定完全限定的类名称或者别名 timestamp。如果你有多个收集器写到同一个HDFS路径，然后你也可以使用HostInterceptor。 </p>
+<h4 id="2-5-1-Flume-Interceptors-种类"><a href="#2-5-1-Flume-Interceptors-种类" class="headerlink" title="2.5.1.Flume Interceptors 种类"></a>2.5.1.Flume Interceptors 种类</h4><ul>
+<li><p><strong>Timestamp Interceptor</strong></p>
+<p>该interceptor向event headers插入秒级时间，当event被处理时。该interceptor插入一个带有关键timestamp（或者由header属性指定）的header，其值是相关的timestamp。该interceptors可以保留一个已存在timestamp，如果它已经在配置中预先配置。 </p>
+</li>
+<li><p><strong>Host Interceptor</strong></p>
+<p>该interceptor插入运行agent的host的hostname或者IP地址。它根据配置插入带有密钥host或配置密钥（其值为host的hostname或IP地址）的header。 </p>
+</li>
+<li><p><strong>Static Interceptor</strong></p>
+<p>静态interceptor运行用户给所有events添加一个带有静态值的静态header。 </p>
+</li>
+<li><p><strong>Remove Header Interceptor</strong></p>
+<p>该interceptor通过移除一个或多个headers来操作Flume event headers。它可以移除一个静态定义的header，基于规则表达式的headers或者在一个列表中的headers。如果这些没有定义，或者如果没有header匹配到标准，Flume events将不会修改。</p>
+<p>注意：如果只有一个header需要移除，通过名字指定它可以提供比其他两种方法更好的性能。</p>
+</li>
+<li><p><strong>UUID Interceptor</strong></p>
+<p>该interceptor在被拦截的所有事件上设置一个通用唯一的标识符。 </p>
+</li>
+<li><p><strong>Morphline Interceptor</strong></p>
+<p>该interceptor通过morphline配置文件过滤events，该配置文件定义了一条从一个命令到另一个命令管道记录的转换命令链。例如，morphline可以忽略某些events，或者通过基于正则表达式的模式匹配来改变或者插入某些event headers，或者它可以通过Apache Tika自动检测和设置一个MIME类型在被拦截的events上。 </p>
+</li>
+<li><p><strong>Search and Replace Interceptor</strong></p>
+<p>该interceptor提供了基于Java正则表达式的简单的基于字符串的search-and-replace功能。回溯/组捕获也是可用的。这个interceptor使用与Java Matcher.replaceAll()方法相同的规则。 </p>
+</li>
+<li><p><strong>Regex Flitering Interceptor</strong></p>
+<p>该拦截器通过将event正文解释为文本并将文本与配置的正则表达式进行匹配来选择性地过滤events。 </p>
+</li>
+<li><p><strong>Regex Extractor Interceptor</strong></p>
+<p>此interceptor使用指定的正则表达式提取正则表达式匹配组，并将匹配组附加为event的headers。 </p>
+<p>该serializers用于将匹配映射到header名称和格式化的header值；默认的，你只需要指定header名称和默认org.apache.flume.interceptor.RegexExtractorInterceptorPassThroughSerializer将会被使用。这个serializer只是将匹配映射到指定的header名称，并传递通过由正则表达式提取的值。 </p>
+</li>
+</ul>
+<h2 id="3-Flume安装"><a href="#3-Flume安装" class="headerlink" title="3.Flume安装"></a>3.Flume安装</h2><h3 id="3-1-JDK下载安装"><a href="#3-1-JDK下载安装" class="headerlink" title="3.1.JDK下载安装"></a>3.1.JDK下载安装</h3><ul>
+<li>下载对应版本JavaSDK，下载地址：<a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank" rel="noopener">http://www.oracle.com/technetwork/java/javase/downloads/index.html</a></li>
+<li>解压jdk到/usr/local目录下</li>
+<li>配置环境变量</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/profile</span><br><span class="line"><span class="meta">#</span><span class="bash"> 在最后面添加如下几行</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="keyword">for</span> jdk</span></span><br><span class="line">export JAVA_HOME=/usr/local/jdk1.8.0_171</span><br><span class="line">export PATH=$PATH:$JAVA_HOME/bin</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 使环境变量生效</span></span><br><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+<h3 id="3-2-Flume下载安装"><a href="#3-2-Flume下载安装" class="headerlink" title="3.2.Flume下载安装"></a>3.2.Flume下载安装</h3><ul>
+<li>下载二进制包，下载地址：<a href="http://flume.apache.org/download.html" target="_blank" rel="noopener">http://flume.apache.org/download.html</a></li>
+<li>下载校验文件，文件名*.asc, 下载地址：<a href="http://flume.apache.org/download.html" target="_blank" rel="noopener">http://flume.apache.org/download.html</a></li>
+<li>下载KEYS，地址：<a href="http://www.apache.org/dist/flume/KEYS" target="_blank" rel="noopener">http://www.apache.org/dist/flume/KEYS</a></li>
+<li>校验下载的二进制包</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">gpg --import KEYS</span><br><span class="line">gpg --verify apache-flume-1.8.0-bin.tar.gz.asc</span><br><span class="line"></span><br><span class="line">gpg: Signature made Fri 15 Sep 2017 09:04:39 PM CST using RSA key ID 4199ACFF</span><br><span class="line">gpg: Good signature from "Denes Arvay &lt;denes@apache.org&gt;"</span><br><span class="line">gpg: WARNING: This key is not certified with a trusted signature!</span><br><span class="line">gpg:          There is no indication that the signature belongs to the owner.</span><br><span class="line">Primary key fingerprint: 4CF1 5CF1 525F CE29 F66C  08FA 302C B2A8 4199 ACFF</span><br></pre></td></tr></table></figure>
+<ul>
+<li>解压二进制包到/usr/local目录下，目录结构如下</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">├── bin</span><br><span class="line">├── conf</span><br><span class="line">├── lib</span><br><span class="line">├── logs</span><br><span class="line">└── tools</span><br></pre></td></tr></table></figure>
+<ul>
+<li>配置Flume</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cp conf/flume-env.sh.template conf/flume-env.sh</span><br><span class="line">vim conf/flume-env.sh</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 打开这两行注释，改成实际需要的参数</span></span><br><span class="line">export JAVA_HOME=/usr/local/jdk1.8.0_171</span><br><span class="line">export JAVA_OPTS="-Xms1024m -Xmx1024m -Dcom.sun.management.jmxremote"</span><br></pre></td></tr></table></figure>
+<h2 id="4-高可用Flume-NG集群搭建-："><a href="#4-高可用Flume-NG集群搭建-：" class="headerlink" title="4.高可用Flume NG集群搭建 ："></a>4.高可用Flume NG集群搭建 ：</h2><p>参考：</p>
+<p><a href="https://www.cnblogs.com/smartloli/p/4468708.html" target="_blank" rel="noopener">https://www.cnblogs.com/smartloli/p/4468708.html</a></p>
+<h3 id="4-1节点分配"><a href="#4-1节点分配" class="headerlink" title="4.1节点分配"></a>4.1节点分配</h3><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>Host</th>
+<th>角色</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Agent1</td>
+<td>epp-nginx-001v</td>
+<td>Web Server</td>
+</tr>
+<tr>
+<td>Agent2</td>
+<td>epp-nginx-002v</td>
+<td>Web Server</td>
+</tr>
+<tr>
+<td>Collector1</td>
+<td>bi-slave1</td>
+<td>AgentMstr1</td>
+</tr>
+<tr>
+<td>Collector2</td>
+<td>bi-slave2</td>
+<td>AgentMstr2</td>
+</tr>
+</tbody>
+</table>
+<p>Agent1，Agent2数据分别流入到Collector1和Collector2，Flume NG本身提供了Failover机制，可以自动切换和恢复。要把所有的日志都收集到一个集群中存储。</p>
+<h3 id="4-2-配置"><a href="#4-2-配置" class="headerlink" title="4.2.配置"></a>4.2.配置</h3><ul>
+<li>Agent1和Agent2的配置相同：</li>
+</ul>
+<p>flume-client.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">a1.sources = r1</span><br><span class="line">a1.sinks = k1 k2</span><br><span class="line">a1.channels = c1</span><br><span class="line"></span><br><span class="line">a1.sources.r1.channels = c1</span><br><span class="line">a1.sources.r1.type = taildir</span><br><span class="line">a1.sources.r1.positionFile = /data/logs/flume/taildir_position.json</span><br><span class="line">a1.sources.r1.filegroups = f1</span><br><span class="line">a1.sources.r1.filegroups.f1 = /usr/local/nginx/logs/ecloud.belle.cn.access.log</span><br><span class="line">a1.sources.r1.fileHeader = true</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">a1.sinks.k1.channel = c1</span><br><span class="line">a1.sinkgroups = g1 </span><br><span class="line">a1.sinkgroups.g1.sinks = k1 k2</span><br><span class="line">a1.sinks.k1.type = avro</span><br><span class="line">a1.sinks.k1.hostname = bi-slave1</span><br><span class="line">a1.sinks.k1.port = 10000</span><br><span class="line">a1.sinks.k1.batch-size = 1000</span><br><span class="line">a1.sinks.k2.channel = c1</span><br><span class="line">a1.sinks.k2.type = avro</span><br><span class="line">a1.sinks.k2.hostname = bi-slave2</span><br><span class="line">a1.sinks.k2.port = 10000</span><br><span class="line">a1.sinks.k2.batch-size = 1000</span><br><span class="line">a1.sinkgroups.g1.processor.type = failover</span><br><span class="line">a1.sinkgroups.g1.processor.priority.k1 = 10</span><br><span class="line">a1.sinkgroups.g1.processor.priority.k2 = 1</span><br><span class="line">a1.sinkgroups.g1.processor.maxpenalty = 10000</span><br><span class="line"></span><br><span class="line">a1.channels.c1.type = memory</span><br><span class="line">a1.channels.c1.capacity = 5000</span><br><span class="line">a1.channels.c1.transactionCapacity = 5000</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Collector1和Collector2下沉到使用kerboros安全认证的CDH集群HDFS中配置</li>
+</ul>
+<p>bi-slave1:  nginxlog.sources.r1.bind = bi-slave1</p>
+<p>bi-slave1:  nginxlog.sources.r1.bind = bi-slave2</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">nginxlog.sinks = k1</span><br><span class="line">nginxlog.channels = c1</span><br><span class="line"></span><br><span class="line">nginxlog.sources.r1.channels = c1</span><br><span class="line">nginxlog.sources.r1.type = avro</span><br><span class="line">nginxlog.sources.r1.channels = c1</span><br><span class="line">nginxlog.sources.r1.bind = bi-slave1</span><br><span class="line">nginxlog.sources.r1.port = 10000</span><br><span class="line"></span><br><span class="line">nginxlog.sinks.k1.channel = c1</span><br><span class="line">nginxlog.sinks.k1.type = hdfs</span><br><span class="line">nginxlog.sinks.k1.hdfs.kerberosPrincipal = hdfs/bi-slave1</span><br><span class="line">nginxlog.sinks.k1.hdfs.kerberosKeytab = /usr/flume-keytab/hdfs.keytab</span><br><span class="line">nginxlog.sinks.k1.hdfs.path = /flume/events/%y-%m-%d</span><br><span class="line">nginxlog.sinks.k1.hdfs.filePrefix = events</span><br><span class="line">nginxlog.sinks.k1.hdfs.round = true</span><br><span class="line">nginxlog.sinks.k1.hdfs.roundValue = 24</span><br><span class="line">nginxlog.sinks.k1.hdfs.roundUnit = hour</span><br><span class="line">nginxlog.sinks.k1.hdfs.rollInterval = 600</span><br><span class="line">nginxlog.sinks.k1.hdfs.rollSize = 268435456</span><br><span class="line">nginxlog.sinks.k1.hdfs.rollCount = 2000</span><br><span class="line">nginxlog.sinks.k1.hdfs.batchSize = 1000</span><br><span class="line">nginxlog.sinks.k1.hdfs.useLocalTimeStamp = true</span><br><span class="line">nginxlog.sinks.k1.hdfs.fileType = DataStream</span><br><span class="line"></span><br><span class="line">nginxlog.channels.c1.type = memory</span><br><span class="line">nginxlog.channels.c1.capacity = 5000</span><br><span class="line">nginxlog.channels.c1.transactionCapacity = 5000</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Collector1和Collector2下沉到使用kerboros安全认证的CDH集群kafka中配置</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">nginxlog.sources = r1</span><br><span class="line">nginxlog.sinks = k1</span><br><span class="line">nginxlog.channels = c1</span><br><span class="line"></span><br><span class="line">nginxlog.sources.r1.channels = c1</span><br><span class="line">nginxlog.sources.r1.type = avro</span><br><span class="line">nginxlog.sources.r1.channels = c1</span><br><span class="line">nginxlog.sources.r1.bind = bi-slave1</span><br><span class="line">nginxlog.sources.r1.port = 10000</span><br><span class="line"></span><br><span class="line">nginxlog.sinks.k1.channel = c1</span><br><span class="line">nginxlog.sinks.k1.type = org.apache.flume.sink.kafka.KafkaSink</span><br><span class="line">nginxlog.sinks.k1.kafka.producer.security.protocol = SASL_PLAINTEXT</span><br><span class="line">nginxlog.sinks.k1.kafka.producer.sasl.kerberos.service.name = kafka</span><br><span class="line">nginxlog.sinks.k1.kafka.producer.group.id = flume-producer</span><br><span class="line">nginxlog.sinks.k1.kafka.topic = nginxlog</span><br><span class="line">nginxlog.sinks.k1.kafka.bootstrap.servers = 172.17.194.17:9092,172.17.194.18:9092,172.17.194.20:9092</span><br><span class="line">nginxlog.sinks.k1.kafka.flumeBatchSize = 1000</span><br><span class="line"></span><br><span class="line">nginxlog.channels.c1.type = memory</span><br><span class="line">nginxlog.channels.c1.capacity = 5000</span><br><span class="line">nginxlog.channels.c1.transactionCapacity = 5000</span><br></pre></td></tr></table></figure>
+<h3 id="4-3-启动"><a href="#4-3-启动" class="headerlink" title="4.3.启动"></a>4.3.启动</h3><ul>
+<li>在Agent节点上启动命令如下所示： </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/flume-ng agent -c conf -f conf/flume-client.conf -n a1 -Dflume.root.logger=INFO,console &gt;&gt; /data/logs/flume/flume_client.log 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>CDH集群上修改bi-slave1和bi-slave2的配置后重启两个节点</li>
+</ul>
+<h3 id="4-4-Failover测试"><a href="#4-4-Failover测试" class="headerlink" title="4.4.Failover测试"></a>4.4.Failover测试</h3><p>在CDH集群中停止bi-slave1的Flume NG服务，查看bi-slave1、bi-slave2的日志，并检查数据的完整性，结果：bi-slave1服务结束后，flume采集的下沉任务到bi-slave2上了，且数据衔接上了。</p>
+<p>bi-slave1恢复服务后，flume采集的下沉任务又回到了bi-slave1上了。</p>
 
           
         
