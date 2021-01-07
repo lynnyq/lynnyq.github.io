@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>My New Hugo Site</title>
+    <link>http://example.org/</link>
+    <description>Recent content on My New Hugo Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 07 Jan 2021 16:33:32 +0800</lastBuildDate><atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>My First Post</title>
+      <link>http://example.org/posts/my-first-post/</link>
+      <pubDate>Thu, 07 Jan 2021 16:33:32 +0800</pubDate>
+      
+      <guid>http://example.org/posts/my-first-post/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://example.org/posts/centos7%E4%B8%8Bansible%E9%83%A8%E7%BD%B2cdh6/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/centos7%E4%B8%8Bansible%E9%83%A8%E7%BD%B2cdh6/</guid>
+      <description>Centos7下Ansible部署CDH6 1.Ansible配置  pip安装  mkdir /root/.pip &amp;amp;&amp;amp; echo &amp;#39;[global]&amp;#39; &amp;gt;&amp;gt; /root/.pip/pip.conf &amp;amp;&amp;amp; echo &amp;#39;index-url = https://mirrors.aliyun.com/pypi/simple&amp;#39; &amp;gt;&amp;gt; /root/.pip/pip.conf &amp;amp;&amp;amp; curl http://10.251.35.58:8900/pip/get-pip.py -o get-pip.py &amp;amp;&amp;amp; python get-pip.py  ansible安装  pip install ansible  ansible配置  vim ~/.bash_profile export ANSIBLE_CONFIG=/etc/ansible/ansible.cfg mkdir /etc/ansible/ &amp;amp;&amp;amp; vim /etc/ansible/ansible.cfg [defaults] inventory = /etc/ansible/hosts host_key_checking = False remote_user = root  配置hosts  vim /etc/ansible/hosts [cdh] 10.251.35.80 10.251.35.81 10.251.35.83 10.251.35.85 10.251.35.86  配置Ansible免密登录  ssh-keygen -t rsa -P &amp;#39;&amp;#39; -f .</description>
+    </item>
+    
+  </channel>
+</rss>
